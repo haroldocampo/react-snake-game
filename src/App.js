@@ -11,6 +11,7 @@ import { useState, useEffect, useRef } from 'react'
 
 function App() {
   const canvasRef = useRef()
+  const gameRef = useRef()
   const [snake, setSnake] = useState(SNAKE_START)
   const [apple, setApple] = useState(APPLE_START)
   const [dir, setDir] = useState([0,-1])
@@ -33,8 +34,14 @@ function App() {
 
   }
 
-  const checkCollision = () => {
-
+  const checkCollision = (snk = snake) => {
+    const head = snk[0];
+    if (
+      head[0] <= 0 || 
+      head[0] >= CANVAS_SIZE[0] ||
+      head[1] <= 0 ||
+      head[1] >= CANVAS_SIZE[1])
+      return true
   }
 
   const checkAppleCollision = () => {
@@ -42,11 +49,16 @@ function App() {
   }
 
   const gameLoop = () => {
+    gameRef.current.focus();
     const tmpSnake = JSON.parse(JSON.stringify(snake));
     const newSnakeHead = [tmpSnake[0][0] + dir[0], tmpSnake[0][1] + dir[1]];
 
     tmpSnake.unshift(newSnakeHead); // move snake head 1 pixel to target direction
     tmpSnake.pop(); // remove last node of snake
+
+    if (checkCollision()) {
+      setGameOver(true)
+    }
 
     setSnake(tmpSnake)
   }
@@ -61,20 +73,24 @@ function App() {
 
     context.fillStyle = 'green';
     context.fillRect(apple[0], apple[1], 1, 1)
+
+    if (gameOver) {
+      context.clearRect(0, 0, CANVAS_SIZE[0], CANVAS_SIZE[1]);
+    }
   }, [snake, apple, gameOver])
 
   useInterval(() => gameLoop(), speed)
 
   return (
-    <div role='button' tabIndex='0' onKeyDown={(e) => moveSnake(e)}>
+    <div ref={gameRef} role='button' tabIndex='0' onKeyDown={(e) => moveSnake(e)}>
       <canvas
-        style={{ border: 'solid 1px #000' }}
+        style={{ border: 'solid 2px red' }}
         ref={canvasRef}
         width={`${CANVAS_SIZE[0]}px`}
         height={`${CANVAS_SIZE[1]}px`}
       />
-      { gameOver && <div>GAME OVER!</div> }
-      <button onClick={startGame}>Play!</button>
+      { gameOver && <h2>GAME OVER!</h2> }
+      <button style={{ fontSize: 16 }}onClick={startGame}>Play!</button>
     </div>
   );
 }
