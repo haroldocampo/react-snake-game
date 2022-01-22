@@ -1,23 +1,59 @@
-import logo from './logo.svg';
-import './App.css';
+import {
+  CANVAS_SIZE,
+  SNAKE_START,
+  APPLE_START,
+  SCALE,
+  SPEED,
+  DIRECTIONS
+} from './gameSettings'
+import { useState, useEffect, useRef } from 'react'
 
 function App() {
+  const canvasRef = useRef()
+  const [snake, setSnake] = useState(SNAKE_START)
+  const [apple, setApple] = useState(APPLE_START)
+  const [dir, setDir] = useState([0,-1]);
+  const [speed, setSpeed] = useState(null);
+  const [gameOver, setGameOver] = useState(false)
+
+  const startGame = () => {
+
+  }
+
+  const endGame = () => {
+
+  }
+
+  const moveSnake = (e) => {
+
+  }
+
+  const spawnApple = () => {
+
+  }
+
+  const checkCollision = () => {
+
+  }
+
+  const checkAppleCollision = () => {
+
+  }
+
+  const gameLoop = () => {
+
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div role='button' tabIndex='0' keyDown={(e) => moveSnake(e)}>
+      <canvas
+        style={{ border: 'solid 1px #000' }}
+        ref={canvasRef}
+        width={`${CANVAS_SIZE[0]}px`}
+        height={`${CANVAS_SIZE[1]}px`}
+      />
+      { gameOver && <div>GAME OVER!</div> }
+      <button onClick={startGame}></button>
     </div>
   );
 }
